@@ -1,0 +1,152 @@
+services:
+  user-microservice:
+    build: DS2023_30241_Cristian-Carol_Budiul_3_Backend/user_microservice
+    hostname: user-microservice
+    depends_on: 
+      - postgresql-user-microservice
+    ports:
+      - 8081:8081
+    environment:
+      - DEVICE_IP=device-microservice
+      - DB_IP=postgresql-user-microservice
+      - DB_PORT=5432
+      - DB_USER=sd_1_users
+      - DB_PASSWORD=root
+      - DB_DBNAME=sd_1_users
+  
+  postgresql-user-microservice:
+    image: postgres
+    restart: always
+    volumes:
+      - db-data-user-microservice:/var/lib/postgresql-user-microservice/data
+    environment:
+      - POSTGRES_USER=sd_1_users
+      - POSTGRES_PASSWORD=root
+
+  device-microservice:
+    build: DS2023_30241_Cristian-Carol_Budiul_3_Backend/device_microservice
+    hostname: device-microservice
+    depends_on: 
+      - postgresql-device-microservice
+      - rabbitmq
+    ports:
+      - 8082:8082
+    environment:
+      - DB_IP=postgresql-device-microservice
+      - DB_PORT=5432
+      - DB_USER=sd_1_devices
+      - DB_PASSWORD=root
+      - DB_DBNAME=sd_1_devices
+      - RQ_HOST=rabbitmq
+      - RQ_PORT=5672
+
+  postgresql-device-microservice:
+    image: postgres
+    restart: always
+    volumes:
+      - db-data-device-microservice:/var/lib/postgresql-device-microservice/data
+    environment:
+      - POSTGRES_USER=sd_1_devices
+      - POSTGRES_PASSWORD=root
+
+  monitoring-microservice:
+    build: DS2023_30241_Cristian-Carol_Budiul_3_Backend/monitoring_microservice
+    hostname: monitoring_microservice
+    depends_on: 
+      - postgresql-monitoring_microservice
+      - rabbitmq
+    ports:
+      - 8083:8083
+    environment:
+      - DB_IP=postgresql-monitoring_microservice
+      - DB_PORT=5432
+      - DB_USER=sd_2_monitoring
+      - DB_PASSWORD=root
+      - DB_DBNAME=sd_2_monitoring
+      - RQ_HOST=rabbitmq
+      - RQ_PORT=5672
+
+  postgresql-monitoring_microservice:
+    image: postgres
+    restart: always
+    volumes:
+      - db-data-monitoring-microservice:/var/lib/postgresql-monitoring_microservice/data
+    environment:
+      - POSTGRES_USER=sd_2_monitoring
+      - POSTGRES_PASSWORD=root
+
+  security-microservice:
+    build: DS2023_30241_Cristian-Carol_Budiul_3_Backend/security_microservice
+    hostname: security_microservice
+    depends_on: 
+      - postgresql-security_microservice
+    ports:
+      - 8080:8080
+    environment:
+      - DB_IP=postgresql-security_microservice
+      - DB_PORT=5432
+      - DB_USER=sd_3_security
+      - DB_PASSWORD=root
+      - DB_DBNAME=sd_3_security
+      - USER_IP=user_microservice
+      - DEVICE_IP=device_microservice
+
+  postgresql-security_microservice:
+    image: postgres
+    restart: always
+    volumes:
+      - db-data-security-microservice:/var/lib/postgresql-security_microservice/data
+    environment:
+      - POSTGRES_USER=sd_3_security
+      - POSTGRES_PASSWORD=root
+
+  chat-microservice:
+    build: DS2023_30241_Cristian-Carol_Budiul_3_Backend/chat_microservice
+    hostname: chat-microservice
+    depends_on: 
+      - postgresql-chat-microservice
+    ports:
+      - 8084:8084
+    environment:
+      - DB_IP=postgresql-chat-microservice
+      - DB_PORT=5432
+      - DB_USER=sd_3_chat
+      - DB_PASSWORD=root
+      - DB_DBNAME=sd_3_chat
+
+  postgresql-chat-microservice:
+    image: postgres
+    restart: always
+    volumes:
+      - db-data-chat-microservice:/var/lib/postgresql-chat_microservice/data
+    environment:
+      - POSTGRES_USER=sd_3_chat
+      - POSTGRES_PASSWORD=root
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+      - rabbitmq-log:/var/log/rabbitmq
+      
+  frontend:
+    build: DS2023_30241_Cristian-Carol_Budiul_3_Frontend/frontend
+    ports:
+      - 3000:3000
+    expose:
+      - 3306
+      - 33060
+
+      
+volumes:
+  db-data-user-microservice:
+  db-data-device-microservice:
+  db-data-monitoring-microservice:
+  db-data-security-microservice:
+  db-data-chat-microservice:
+  rabbitmq-data:
+  rabbitmq-log:

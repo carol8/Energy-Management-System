@@ -1,0 +1,25 @@
+.mainDiv {
+    display: flex;
+    height: 140%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tableDiv {
+    display: flex;
+    flex: 4;
+    flex-flow: column nowrap;
+    padding: 1rem;
+}
+
+.graphDiv {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.graphFieldsDiv {
+    display: flex;
+    flex-flow: column nowrap;
+}
