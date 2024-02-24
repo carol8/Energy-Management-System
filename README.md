@@ -3,11 +3,14 @@ To build and run the Energy Management System, follow these steps:
 ### Prerequisites
 - Java Development Kit (JDK) 17 or higher
 - Docker desktop
-### Building and Configuring Microservices
-1.	Clone the backend repository.
-2.	Build and deploy each microservice using the provided docker files / docker compose.
-### Building and Configuring the Frontend
-1. Clone the React frontend application repository.
+### Building and Configuring the project
+1. Clone this repository
+2. Build and deploy the whole application using the provided docker compose file.
+### Building and Configuring only the Backend
+1. Clone this repository.
+2. Build and deploy each microservice using the provided docker files / docker compose.
+### Building and Configuring only the Frontend
+1. Clone this repository.
 2. Build and deploy the frontend using the provided docker files.
 ### Database Configuration
 There is no need to do additional configuration, as the default configuration is included in the microservice compose.yaml file. However, if another configuration is needed, further configuration is required.
